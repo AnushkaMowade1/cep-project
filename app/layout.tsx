@@ -2,12 +2,19 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Analytics } from '@vercel/analytics/next'
+import Footer from '@/components/footer'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'कला Bazaar - Indian Art E-commerce',
+  description: 'Discover and shop authentic Indian art, paintings, and handicrafts at कला Bazaar. Supporting local artists and traditional craftsmanship.',
+  keywords: 'Indian art, paintings, handicrafts, traditional art, kala bazaar, art marketplace',
+  authors: [{ name: 'कला Bazaar' }],
+  openGraph: {
+    title: 'कला Bazaar - Indian Art E-commerce',
+    description: 'Discover and shop authentic Indian art, paintings, and handicrafts',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
@@ -27,8 +34,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} flex flex-col min-h-screen`}>
         {children}
+        <Footer />
         <Analytics />
       </body>
     </html>
