@@ -6,7 +6,10 @@ import Footer from '@/components/footer'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'कला Bazaar - Indian Art E-commerce',
+  title: {
+    default: 'कला Bazaar - Indian Art E-commerce',
+    template: '%s | कला Bazaar'
+  },
   description: 'Discover and shop authentic Indian art, paintings, and handicrafts at कला Bazaar. Supporting local artists and traditional craftsmanship.',
   keywords: 'Indian art, paintings, handicrafts, traditional art, kala bazaar, art marketplace',
   authors: [{ name: 'कला Bazaar' }],
@@ -14,7 +17,14 @@ export const metadata: Metadata = {
     title: 'कला Bazaar - Indian Art E-commerce',
     description: 'Discover and shop authentic Indian art, paintings, and handicrafts',
     type: 'website',
+    siteName: 'कला Bazaar',
   },
+  twitter: {
+    title: 'कला Bazaar - Indian Art E-commerce',
+    description: 'Discover and shop authentic Indian art, paintings, and handicrafts',
+  },
+  viewport: 'width=device-width, initial-scale=1',
+  robots: 'index, follow',
 }
 
 export default function RootLayout({

@@ -2,6 +2,12 @@ import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'कला Bazaar - Authentic Indian Art & Handicrafts',
+  description: 'Welcome to कला Bazaar - Your destination for authentic Indian art, traditional paintings, and handcrafted masterpieces. Support local artists and discover India\'s rich artistic heritage.',
+}
 
 export default async function HomePage() {
   const supabase = await createClient()
