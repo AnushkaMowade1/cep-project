@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'कला Bazaar - Authentic Indian Art & Handicrafts',
-  description: 'Welcome to कला Bazaar - Your destination for authentic Indian art, traditional paintings, and handcrafted masterpieces. Support local artists and discover India\'s rich artistic heritage.',
+  title: 'Martify - Authentic Indian Art & Handicrafts',
+  description: 'Welcome to Martify - Your destination for authentic Indian art, traditional paintings, and handcrafted masterpieces. Support local artists and discover India\'s rich artistic heritage.',
 }
 
 export default async function HomePage() {
@@ -24,7 +24,7 @@ export default async function HomePage() {
       <div className="container mx-auto px-6 py-12">
         <div className="text-center space-y-8">
           <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl font-serif font-bold text-balance"><span className="text-red-800 font-bold italic" style={{fontFamily: "'AMS Aasmi', 'Noto Sans Devanagari', sans-serif", fontSize: '1.1em', textShadow: '2px 2px 4px rgba(0,0,0,0.1)', transform: 'skew(-5deg)', display: 'inline-block', fontWeight: 'bold'}}>कला</span> Bazaar</h1>
+            <h1 className="text-4xl md:text-6xl font-serif font-bold text-balance">Martify</h1>
             <p className="text-xl md:text-2xl text-muted-foreground text-pretty max-w-2xl mx-auto">
               {"Discover authentic handcrafted sarees and salwars made by talented Indian artisan women"}
             </p>

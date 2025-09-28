@@ -23,7 +23,7 @@ export default function VerifyEmailPage() {
           <CardContent className="text-center space-y-4">
             <p className="text-sm text-muted-foreground leading-relaxed">
               {
-                "Please check your email and click the verification link to activate your account. Once verified, you can start exploring कला Bazaar."
+                "Please check your email and click the verification link to activate your account. Once verified, you can start exploring Martify."
               }
             </p>
             <div className="pt-4">

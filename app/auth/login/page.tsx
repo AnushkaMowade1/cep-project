@@ -48,7 +48,7 @@ export default function LoginPage() {
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
               </svg>
             </div>
-            <CardTitle className="text-2xl font-serif text-balance">Welcome to <span className="text-red-800 italic" style={{fontFamily: "'AMS Aasmi', 'Noto Sans Devanagari', sans-serif", fontSize: '1.1em', textShadow: '1px 1px 2px rgba(0,0,0,0.1)', transform: 'skew(-3deg)', display: 'inline-block', fontWeight: 'bold'}}>कला</span> Bazaar</CardTitle>
+            <CardTitle className="text-2xl font-serif text-balance">Welcome to Martify</CardTitle>
             <CardDescription className="text-pretty">
               {"Discover handcrafted sarees and salwars by Indian artisan women"}
             </CardDescription>

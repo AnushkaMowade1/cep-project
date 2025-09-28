@@ -185,7 +185,7 @@ export default function ShopInterface({ user, profile, initialProducts }: ShopIn
                 </Link>
               </Button>
               <div>
-                <h1 className="text-xl font-serif font-bold"><span className="text-red-800 italic" style={{fontFamily: "'AMS Aasmi', 'Noto Sans Devanagari', sans-serif", fontSize: '1.2em', textShadow: '1px 1px 2px rgba(0,0,0,0.1)', transform: 'skew(-3deg)', display: 'inline-block', fontWeight: 'bold'}}>कला</span> Bazaar</h1>
+                <h1 className="text-xl font-serif font-bold">Martify</h1>
                 <p className="text-sm text-muted-foreground">Handcrafted with love</p>
               </div>
             </div>

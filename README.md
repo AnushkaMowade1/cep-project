@@ -1,8 +1,8 @@
-# कला Bazaar - Community Engagement Project
+# Martify - Community Engagement Project
 
 ## Project Overview
 
-**कला Bazaar** is a digital platform developed as part of my Community Engagement Project (CEP) for my college curriculum. This project aims to bridge the gap between traditional Indian artisan women and the digital marketplace, empowering them to showcase and sell their handcrafted sarees and salwars online.
+**Martify** is a digital platform developed as part of my Community Engagement Project (CEP) for my college curriculum. This project aims to bridge the gap between traditional Indian artisan women and the digital marketplace, empowering them to showcase and sell their handcrafted sarees and salwars online.
 
 ## Project Objectives
 
@@ -14,7 +14,7 @@
 
 ### Technical Implementation
 - Modern, responsive e-commerce platform built with Next.js and TypeScript
-- Authentic Indian design aesthetic with custom Hindi typography (कला)
+- Authentic Indian design aesthetic with modern typography
 - User authentication and secure payment processing
 - Comprehensive product management system
 - Mobile-first responsive design
@@ -36,7 +36,7 @@
 
 ## Cultural Design Elements
 
-- **कला Typography**: Custom AMS Aasmi font implementation for authentic Hindi script rendering
+- **Modern Typography**: Clean, professional branding for international appeal
 - **Color Palette**: Warm earth tones inspired by traditional Indian art
 - **Visual Identity**: Orange accent colors representing Indian cultural heritage
 - **User Experience**: Intuitive design respecting Indian cultural preferences

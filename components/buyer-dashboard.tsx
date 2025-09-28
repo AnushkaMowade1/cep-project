@@ -100,7 +100,7 @@ export default function BuyerDashboard({ user, profile }: { user: any; profile: 
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-serif font-bold">Welcome to <span className="text-red-800 italic" style={{fontFamily: "'AMS Aasmi', 'Noto Sans Devanagari', sans-serif", fontSize: '1.1em', textShadow: '1px 1px 2px rgba(0,0,0,0.1)', transform: 'skew(-3deg)', display: 'inline-block', fontWeight: 'bold'}}>कला</span> Bazaar</h1>
+              <h1 className="text-2xl font-serif font-bold">Welcome to Martify</h1>
               <p className="text-muted-foreground">Hello, {profile.full_name}</p>
             </div>
             <div className="flex items-center gap-4">
@@ -184,7 +184,7 @@ export default function BuyerDashboard({ user, profile }: { user: any; profile: 
         <Card>
           <CardHeader>
             <CardTitle>Recent Orders</CardTitle>
-            <CardDescription>Your recent purchases from <span className="text-red-800 font-medium italic" style={{fontFamily: "'AMS Aasmi', 'Noto Sans Devanagari', sans-serif", fontSize: '1.05em', textShadow: '1px 1px 2px rgba(0,0,0,0.1)', transform: 'skew(-2deg)', display: 'inline-block', fontWeight: 'bold'}}>कला</span> Bazaar</CardDescription>
+            <CardDescription>Your recent purchases from Martify</CardDescription>
           </CardHeader>
           <CardContent>
             {orders.length === 0 ? (

@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div className="flex items-center space-x-2">
             <span className="text-lg font-serif font-bold">
-              <span className="text-red-800" style={{fontFamily: "'AMS Aasmi', 'Noto Sans Devanagari', sans-serif"}}>कला</span> Bazaar
+              Martify
             </span>
           </div>
           
@@ -30,7 +30,7 @@ export default function Footer() {
         </div>
         
         <div className="mt-4 pt-4 border-t text-center text-sm text-gray-500">
-          <p>&copy; 2025 कला Bazaar. Empowering Indian Artisan Women.</p>
+          <p>&copy; 2025 Martify. Empowering Indian Artisan Women.</p>
         </div>
       </div>
     </footer>
