@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useRef } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -32,6 +33,8 @@ export default function AddProductDialog({ open, onOpenChange, onProductAdded, s
     stock_quantity: "",
   })
   const [images, setImages] = useState<string[]>([])
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -84,9 +87,103 @@ export default function AddProductDialog({ open, onOpenChange, onProductAdded, s
   }
 
   const addImageUrl = () => {
-    const url = prompt("Enter image URL:")
+    const url = prompt("Enter image URL (you can paste a Google Drive share link):")
     if (url && url.trim()) {
-      setImages([...images, url.trim()])
+      const trimmed = url.trim()
+      const normalized = normalizeDriveUrl(trimmed)
+      setImages([...images, normalized])
+    }
+  }
+
+  // File upload handlers (drag & drop + file picker)
+  const handleFileInput = async (files: FileList | null) => {
+    if (!files || files.length === 0) return
+    setUploading(true)
+    try {
+      const uploadedUrls: string[] = []
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        try {
+          const url = await uploadFileToStorage(file)
+          if (url) uploadedUrls.push(url)
+        } catch (e) {
+          // continue uploading others
+          console.error('Upload failed for file', file.name, e)
+        }
+      }
+      if (uploadedUrls.length > 0) setImages((prev) => [...prev, ...uploadedUrls])
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleFileInput(e.target.files)
+  }
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    handleFileInput(e.dataTransfer.files)
+  }
+
+  const onDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+  }
+
+  async function uploadFileToStorage(file: File) {
+    // bucket name used for product images
+    const bucket = 'product-images'
+
+    // generate a reasonably-unique path
+    const ext = file.name.split('.').pop() || 'jpg'
+    const filename = `${sellerId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`
+
+    // Upload
+    const { data, error } = await supabase.storage.from(bucket).upload(filename, file)
+    if (error) {
+      throw error
+    }
+
+    // Get public URL
+    const publicData = await supabase.storage.from(bucket).getPublicUrl(filename)
+    // publicData shape: { data: { publicUrl } }
+    // Depending on client version it may be data.publicUrl or data.public_url
+    const publicUrl = (publicData as any)?.data?.publicUrl || (publicData as any)?.data?.public_url
+    return publicUrl as string
+  }
+
+  // Convert common Google Drive sharing URLs into a direct image URL that can be embedded
+  // Examples supported:
+  // - https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+  // - https://drive.google.com/open?id=FILE_ID
+  // - https://drive.google.com/uc?export=download&id=FILE_ID
+  function normalizeDriveUrl(input: string) {
+    try {
+      const url = new URL(input)
+
+      // If already a drive 'uc' link or a direct URL, return as-is
+      if (url.hostname.includes('googleusercontent.com') || url.pathname.endsWith('.jpg') || url.pathname.endsWith('.png') || url.pathname.endsWith('.webp') || url.pathname.endsWith('.jpeg') ) {
+        return input
+      }
+
+      if (url.hostname === 'drive.google.com') {
+        // /file/d/FILE_ID/view
+        const parts = url.pathname.split('/')
+        const fileIndex = parts.indexOf('d')
+        if (fileIndex !== -1 && parts[fileIndex + 1]) {
+          const fileId = parts[fileIndex + 1]
+          return `https://drive.google.com/uc?export=view&id=${fileId}`
+        }
+
+        // ?id=FILE_ID
+        const id = url.searchParams.get('id')
+        if (id) return `https://drive.google.com/uc?export=view&id=${id}`
+      }
+
+      // Fallback: return original input
+      return input
+    } catch (e) {
+      return input
     }
   }
 
@@ -223,29 +320,58 @@ export default function AddProductDialog({ open, onOpenChange, onProductAdded, s
                 Add Image URL
               </Button>
             </div>
+            <p className="text-xs text-muted-foreground">You can paste direct image URLs or a Google Drive share link. Drive links will be normalized automatically (make sure the file is shared publicly or "Anyone with the link can view").</p>
 
-            {images.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {images.map((image, index) => (
-                  <div key={index} className="relative group">
-                    <img
-                      src={image || "/placeholder.svg"}
-                      alt={`Product image ${index + 1}`}
-                      className="w-full h-24 object-cover rounded-md border"
-                    />
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => removeImage(index)}
-                    >
-                      <X className="w-3 h-3" />
-                    </Button>
-                  </div>
-                ))}
+            <div
+              onDrop={onDrop}
+              onDragOver={onDragOver}
+              className="border border-dashed rounded-md p-4 text-center bg-background/50"
+            >
+              <p className="text-sm text-muted-foreground mb-2">Drag & drop images here or use the file picker</p>
+              <div className="flex items-center justify-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={onFileChange}
+                  className="hidden"
+                />
+                <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} className="gap-2 bg-transparent">
+                  <Upload className="w-4 h-4" />
+                  Upload Images
+                </Button>
+                <Button type="button" variant="outline" onClick={addImageUrl} className="gap-2 bg-transparent">
+                  <Upload className="w-4 h-4" />
+                  Add Image URL
+                </Button>
               </div>
-            )}
+
+              {uploading && <p className="text-xs text-muted-foreground mt-2">Uploading images...</p>}
+
+              {images.length > 0 && (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                  {images.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={image || "/placeholder.svg"}
+                        alt={`Product image ${index + 1}`}
+                        className="w-full h-24 object-cover rounded-md border"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => removeImage(index)}
+                      >
+                        <X className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {error && (
