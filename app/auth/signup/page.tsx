@@ -27,6 +27,16 @@ export default function SignupPage() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
+    // Validate Supabase env vars early to avoid opaque "Failed to fetch" errors
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!supabaseUrl || !supabaseAnonKey) {
+      setError('Missing Supabase configuration: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY is not set')
+      setIsLoading(false)
+      console.error('Supabase env missing', { supabaseUrl, supabaseAnonKey: !!supabaseAnonKey })
+      return
+    }
+
     const supabase = createClient()
     setIsLoading(true)
     setError(null)
@@ -63,7 +73,16 @@ export default function SignupPage() {
         router.push("/auth/verify-email")
       }
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      if (error instanceof Error) {
+        // Detect common network failure message
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+          setError('Network error: Unable to reach Supabase. Check your NEXT_PUBLIC_SUPABASE_URL and network connectivity.')
+        } else {
+          setError(error.message)
+        }
+      } else {
+        setError('An unknown error occurred')
+      }
     } finally {
       setIsLoading(false)
     }

@@ -16,6 +16,10 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isResetOpen, setIsResetOpen] = useState(false)
+  const [resetEmail, setResetEmail] = useState("")
+  const [resetMessage, setResetMessage] = useState<string | null>(null)
+  const [isResetting, setIsResetting] = useState(false)
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -35,6 +39,34 @@ export default function LoginPage() {
       setError(error instanceof Error ? error.message : "An error occurred")
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handlePasswordReset = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    setIsResetting(true)
+    setResetMessage(null)
+
+    try {
+      const supabase = createClient()
+      if (!resetEmail) {
+        setResetMessage('Please enter your email')
+        return
+      }
+
+      const redirectTo = process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/auth/reset-password`
+
+      const { data, error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo,
+      })
+
+      if (error) throw error
+
+      setResetMessage('If an account with that email exists, a password reset link has been sent.')
+    } catch (err: unknown) {
+      setResetMessage(err instanceof Error ? err.message : 'Failed to send reset email')
+    } finally {
+      setIsResetting(false)
     }
   }
 
@@ -86,7 +118,44 @@ export default function LoginPage() {
               <Button type="submit" className="w-full font-medium" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
+              <div className="text-center mt-2">
+                <button
+                  type="button"
+                  className="text-sm text-primary underline"
+                  onClick={() => setIsResetOpen(true)}
+                >
+                  Forgot password?
+                </button>
+              </div>
             </form>
+
+            {/* Password reset modal (simple inline) */}
+            {isResetOpen && (
+              <div className="mt-6 p-4 border rounded-md bg-card">
+                <h3 className="font-medium mb-2">Reset your password</h3>
+                <form onSubmit={handlePasswordReset} className="space-y-3">
+                  <div>
+                    <Label htmlFor="resetEmail">Email</Label>
+                    <Input
+                      id="resetEmail"
+                      type="email"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      className="border-2"
+                    />
+                  </div>
+                  {resetMessage && <p className="text-sm text-muted-foreground">{resetMessage}</p>}
+                  <div className="flex gap-2">
+                    <Button type="button" variant="outline" onClick={() => setIsResetOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={isResetting}>
+                      {isResetting ? 'Sending...' : 'Send reset link'}
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
             <div className="mt-6 text-center text-sm">
               {"Don't have an account? "}
               <Link
