@@ -27,19 +27,10 @@ export default function SignupPage() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Validate Supabase env vars early to avoid opaque "Failed to fetch" errors
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    if (!supabaseUrl || !supabaseAnonKey) {
-      setError('Missing Supabase configuration: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY is not set')
-      setIsLoading(false)
-      console.error('Supabase env missing', { supabaseUrl, supabaseAnonKey: !!supabaseAnonKey })
-      return
-    }
-
-    const supabase = createClient()
     setIsLoading(true)
     setError(null)
+
+    const supabase = createClient()
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match")
@@ -58,7 +49,7 @@ export default function SignupPage() {
         email: formData.email,
         password: formData.password,
         options: {
-          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             full_name: formData.fullName,
             phone: formData.phone,
@@ -70,18 +61,16 @@ export default function SignupPage() {
       if (error) throw error
 
       if (data.user) {
-        router.push("/auth/verify-email")
+        // For development, we'll redirect to dashboard directly
+        // In production, you might want to redirect to verify-email
+        router.push("/dashboard")
       }
     } catch (error: unknown) {
+      console.error("Signup error:", error)
       if (error instanceof Error) {
-        // Detect common network failure message
-        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-          setError('Network error: Unable to reach Supabase. Check your NEXT_PUBLIC_SUPABASE_URL and network connectivity.')
-        } else {
-          setError(error.message)
-        }
+        setError(error.message)
       } else {
-        setError('An unknown error occurred')
+        setError('An unexpected error occurred')
       }
     } finally {
       setIsLoading(false)
