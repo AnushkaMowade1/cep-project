@@ -10,8 +10,20 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, User, Store, Package } from "lucide-react"
 import Link from "next/link"
 
+interface Profile {
+  id: string
+  email: string
+  full_name: string
+  phone: string
+  user_type: string
+  is_seller: boolean
+  avatar_url?: string
+  bio?: string
+  created_at: string
+}
+
 export default function ProfilePage() {
-  const [profile, setProfile] = useState(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -61,7 +73,7 @@ export default function ProfilePage() {
     }
   }
 
-  const handleCreateProfile = async (e) => {
+  const handleCreateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSaving(true)
     setError("")
@@ -117,7 +129,7 @@ export default function ProfilePage() {
         setShowCreateForm(false)
         await checkUserAndProfile()
       }
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message)
     } finally {
       setIsSaving(false)
@@ -144,7 +156,7 @@ export default function ProfilePage() {
 
       setSuccess("Congratulations! You are now a seller.")
       await checkUserAndProfile()
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message)
     } finally {
       setIsSaving(false)
