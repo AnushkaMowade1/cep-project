@@ -50,14 +50,18 @@ export default function ShopInterface({ user, profile, initialProducts }: ShopIn
   const supabase = createClient()
 
   useEffect(() => {
-    fetchUserData()
-  }, [])
+    if (user) {
+      fetchUserData()
+    }
+  }, [user])
 
   useEffect(() => {
     filterProducts()
   }, [searchQuery, selectedCategory, priceRange, sortBy, products])
 
   const fetchUserData = async () => {
+    if (!user) return
+    
     // Fetch user's favorites
     const { data: favoritesData } = await supabase.from("favorites").select("product_id").eq("user_id", user.id)
 
@@ -121,6 +125,12 @@ export default function ShopInterface({ user, profile, initialProducts }: ShopIn
   }
 
   const toggleFavorite = async (productId: string) => {
+    if (!user) {
+      // Redirect to profile creation if not logged in
+      router.push("/profile")
+      return
+    }
+
     const isFavorite = favorites.has(productId)
 
     if (isFavorite) {
@@ -146,6 +156,12 @@ export default function ShopInterface({ user, profile, initialProducts }: ShopIn
   }
 
   const addToCart = async (productId: string) => {
+    if (!user) {
+      // Redirect to profile creation if not logged in
+      router.push("/profile")
+      return
+    }
+
     const { error } = await supabase.from("cart_items").insert({
       user_id: user.id,
       product_id: productId,
@@ -178,33 +194,39 @@ export default function ShopInterface({ user, profile, initialProducts }: ShopIn
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/dashboard">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
-                </Link>
-              </Button>
               <div>
                 <h1 className="text-xl font-serif font-bold">Martify</h1>
                 <p className="text-sm text-muted-foreground">Handcrafted with love</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm" asChild>
-                <Link href="/cart" className="gap-2">
-                  <ShoppingCart className="w-4 h-4" />
-                  Cart ({cartItems.size})
-                </Link>
-              </Button>
-              <Button variant="outline" size="sm" asChild>
-                <Link href="/favorites" className="gap-2">
-                  <Heart className="w-4 h-4" />
-                  Favorites ({favorites.size})
-                </Link>
-              </Button>
-              <Button variant="outline" size="sm" onClick={handleSignOut}>
-                Sign Out
-              </Button>
+              {user ? (
+                <>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/cart" className="gap-2">
+                      <ShoppingCart className="w-4 h-4" />
+                      Cart ({cartItems.size})
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/favorites" className="gap-2">
+                      <Heart className="w-4 h-4" />
+                      Favorites ({favorites.size})
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/profile">
+                      Profile
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                <Button asChild>
+                  <Link href="/profile">
+                    Create Profile
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
         </div>

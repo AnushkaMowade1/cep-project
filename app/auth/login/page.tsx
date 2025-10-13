@@ -1,54 +1,139 @@
-"use client"
+"use client""use client""use client"
 
-import type React from "react"
 
-import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import Link from "next/link"
+
+import { useEffect } from "react"
+
 import { useRouter } from "next/navigation"
-import { useState } from "react"
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isResetOpen, setIsResetOpen] = useState(false)
-  const [resetEmail, setResetEmail] = useState("")
-  const [resetMessage, setResetMessage] = useState<string | null>(null)
-  const [isResetting, setIsResetting] = useState(false)
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"import { useEffect } from "react"import { useEffect } from "react"
+
+import { Button } from "@/components/ui/button"
+
+import Link from "next/link"import { useRouter } from "next/navigation"import { useRouter } from "next/navigation"
+
+
+
+export default function LoginRedirectPage() {import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
   const router = useRouter()
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError(null)
+import { Button } from "@/components/ui/button"import { Button } from "@/components/ui/button"
 
-    const supabase = createClient()
+  useEffect(() => {
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-      
-      if (error) throw error
-      
-      if (data.user) {
-        router.push("/dashboard")
-      }
-    } catch (error: unknown) {
-      console.error("Login error:", error)
-      if (error instanceof Error) {
-        setError(error.message)
-      } else {
-        setError("An unexpected error occurred")
-      }
-    } finally {
-      setIsLoading(false)
+    // Redirect to profile page after a short delayimport Link from "next/link"import Link from "next/link"
+
+    const timer = setTimeout(() => {
+
+      router.push("/profile")
+
+    }, 2000)
+
+export default function LoginRedirectPage() {export default function LoginPage() {
+
+    return () => clearTimeout(timer)
+
+  }, [router])  const router = useRouter()  const [email, setEmail] = useState("")
+
+
+
+  return (  const [password, setPassword] = useState("")
+
+    <div className="min-h-screen flex items-center justify-center p-6 warli-pattern">
+
+      <div className="w-full max-w-md">  useEffect(() => {  const [error, setError] = useState<string | null>(null)
+
+        <Card className="border-2 warli-border shadow-xl">
+
+          <CardHeader className="text-center space-y-4">    // Redirect to profile page after a short delay  const [isLoading, setIsLoading] = useState(false)
+
+            <CardTitle className="text-2xl font-serif text-balance">Authentication Updated</CardTitle>
+
+            <CardDescription className="text-pretty">    const timer = setTimeout(() => {  const [isResetOpen, setIsResetOpen] = useState(false)
+
+              We've simplified our authentication system. You'll be redirected to create your profile.
+
+            </CardDescription>      router.push("/profile")  const [resetEmail, setResetEmail] = useState("")
+
+          </CardHeader>
+
+          <CardContent className="text-center space-y-4">    }, 2000)  const [resetMessage, setResetMessage] = useState<string | null>(null)
+
+            <p className="text-sm text-muted-foreground">
+
+              Redirecting to profile page in a moment...  const [isResetting, setIsResetting] = useState(false)
+
+            </p>
+
+            <Button asChild className="w-full">    return () => clearTimeout(timer)  const router = useRouter()
+
+              <Link href="/profile">Go to Profile Now</Link>
+
+            </Button>  }, [router])
+
+            <Button asChild variant="outline" className="w-full">
+
+              <Link href="/">Browse Products</Link>  const handleLogin = async (e: React.FormEvent) => {
+
+            </Button>
+
+          </CardContent>  return (    e.preventDefault()
+
+        </Card>
+
+      </div>    <div className="min-h-screen flex items-center justify-center p-6 warli-pattern">    setIsLoading(true)
+
+    </div>
+
+  )      <div className="w-full max-w-md">    setError(null)
+
+}
+        <Card className="border-2 warli-border shadow-xl">
+
+          <CardHeader className="text-center space-y-4">    const supabase = createClient()
+
+            <CardTitle className="text-2xl font-serif text-balance">Authentication Updated</CardTitle>
+
+            <CardDescription className="text-pretty">    try {
+
+              We've simplified our authentication system. You'll be redirected to create your profile.      const { data, error } = await supabase.auth.signInWithPassword({
+
+            </CardDescription>        email,
+
+          </CardHeader>        password,
+
+          <CardContent className="text-center space-y-4">      })
+
+            <p className="text-sm text-muted-foreground">      
+
+              Redirecting to profile page in a moment...      if (error) throw error
+
+            </p>      
+
+            <Button asChild className="w-full">      if (data.user) {
+
+              <Link href="/profile">Go to Profile Now</Link>        router.push("/dashboard")
+
+            </Button>      }
+
+            <Button asChild variant="outline" className="w-full">    } catch (error: unknown) {
+
+              <Link href="/">Browse Products</Link>      console.error("Login error:", error)
+
+            </Button>      if (error instanceof Error) {
+
+          </CardContent>        setError(error.message)
+
+        </Card>      } else {
+
+      </div>        setError("An unexpected error occurred")
+
+    </div>      }
+
+  )    } finally {
+
+}      setIsLoading(false)
     }
   }
 
